@@ -31,7 +31,7 @@ class User(db.Model):# corresponde a la base sql alquemy  linea 3
                 # nombre de la clase
         return '<User %r>' % self.email # se coloca algo que no se repita despues del %
     
-    def serialize(self): #serialize todos los datos de la tabla menos el passowrd
+    def serialize(self): #serialize todos los datos de la tabla menos el passowrd, datos que quiero mostrar
         return {
             "id": self.id,
             "email": self.email,
