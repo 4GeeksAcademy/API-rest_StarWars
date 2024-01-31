@@ -65,7 +65,7 @@ def get_usuarios_favoritos():
 
 
 @app.route('/user/<int:idUser>', methods=['GET', 'DELETE'])
-def get_id_user(idUser):
+def get_id_user(idUser): 
     id_user = User.query.filter_by(id = idUser).first() #filtrar por el id
     if id_user is None: 
         return jsonify({"msg": "No existe el usuario"}), 404
@@ -206,7 +206,45 @@ def add_favorites():
     db.session.commit()
     return jsonify({"msg": "Favorito creado"}), 200
 
+                                                    #aprovechar la ruta
+@app.route('/favorites/planet/<int:id_planeta>', methods=['POST', 'DELETE'])
+def favorites_planets(id_planeta):
+    body = json.loads(request.data) 
+    if request.method == "POST":
+        nuevo_favorito = Favorites(
+            #se accede a las tablas a traves del modelo models.py
+            user_id = body["user_id"], # a traves del body capturamos el id usuario
+            #mismo nombre de la tabla
+            planet_id = id_planeta
+    )
+        db.session.add(nuevo_favorito)#agregue 
+        db.session.commit()
+        return jsonify({"msg": "Favorito creado"}), 200
+    if request.method == "DELETE":                     #filtrado por usuario             #tabla.......viene por url
+        planeta_a_borrar = Favorites.query.filter_by(user_id = body["user_id"]).filter_by(planet_id = id_planeta).first() #filtral a los planetas cuando email de la tabla es el mismo que ingreso en Postman
+        db.session.delete(planeta_a_borrar)
+        db.session.commit()
+        return jsonify({"msg": "El planeta se ha borrado"}), 200
 
+
+@app.route('/favorites/character/<int:id_character>', methods=['POST', 'DELETE'])
+def favorites_character(id_character):
+    body = json.loads(request.data) 
+    if request.method == "POST":
+        nuevo_favorito = Favorites(
+            #se accede a las tablas a traves del modelo models.py
+            user_id = body["user_id"], # a traves del body capturamos el id usuario
+            #mismo nombre de la tabla
+            character_id = id_character
+    )
+        db.session.add(nuevo_favorito)#agregue 
+        db.session.commit()
+        return jsonify({"msg": "Favorito creado"}), 200
+    if request.method == "DELETE":                     #filtrado por usuario             #tabla.......viene por url
+        personaje_a_borrar = Favorites.query.filter_by(user_id = body["user_id"]).filter_by(character_id = id_character).first() #filtral a los planetas cuando email de la tabla es el mismo que ingreso en Postman
+        db.session.delete(personaje_a_borrar)
+        db.session.commit()
+        return jsonify({"msg": "El personaje se ha borrado"}), 200
     
 
 
